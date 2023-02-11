@@ -115,16 +115,16 @@ def breadthFirstSearch(problem):
     queue.push([])
 
     while not queue.isEmpty():
-        path = queue.pop()
         current = queue.pop()
+        path = queue.pop()
         if current not in nodes:
             nodes.append(current)
             if problem.isGoalState(current):
                 return path
             for successor in problem.getSuccessors(current):
                 queue.push(successor[0])
-                queue.push([successor[1]] + path)
-    util.raiseNotDefined()
+                queue.push(path + [successor[1]])
+    
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
