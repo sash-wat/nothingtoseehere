@@ -1,3 +1,5 @@
+# Students: Rishi Mullangi and Sashwat Venkatesh
+
 # search.py
 # ---------
 # Licensing Information:  You are free to use or extend these projects for
@@ -82,23 +84,100 @@ def depthFirstSearch(problem):
     To get started, you might want to try some of these simple commands to
     understand the search problem that is being passed in:
 
-    print("Start:", problem.getStartState())
+    
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    fringe = util.Stack()
+    visited = []
+    start_state = problem.getStartState()
+    fringe.push(start_state)
+    fringe.push([])
+    
+    while not fringe.isEmpty():
+        path = fringe.pop()
+        curr_state = fringe.pop()
+        if curr_state not in visited:
+            visited.append(curr_state)
+
+            if problem.isGoalState(curr_state):
+                return path
+
+            for successor in problem.getSuccessors(curr_state):
+                fringe.push(successor[0])
+                fringe.push(path + [successor[1]])
+    return []
+
+def genericSearch(problem, queue):
+    nodes = []
+    queue = util.Queue()
+    start = problem.getStartState()
+    queue.push(start)
+    queue.push([])
+    # queue.push((start, []))
+    while not queue.isEmpty():
+        current = queue.pop()
+        path = queue.pop()
+        # current, path = queue.pop()
+        if current not in nodes:
+            nodes.append(current)
+            if problem.isGoalState(current):
+                return path
+            for successor in problem.getSuccessors(current):
+                queue.push(successor[0])
+                queue.push(path + [successor[1]])
+                # queue.push((successor[0], path + [successor[1]]))
+    return []
+    
 
 def breadthFirstSearch(problem):
-    """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    return genericSearch(problem, util.Queue())
+    # nodes = []
+    # queue = util.Queue()
+    # start = problem.getStartState()
+    # queue.push(start)
+    # queue.push([])
+    # # queue.push((start, []))
+    # while not queue.isEmpty():
+    #     current = queue.pop()
+    #     path = queue.pop()
+    #     # current, path = queue.pop()
+    #     if current not in nodes:
+    #         nodes.append(current)
+    #         if problem.isGoalState(current):
+    #             return path
+    #         for successor in problem.getSuccessors(current):
+    #             queue.push(successor[0])
+    #             queue.push(path + [successor[1]])
+    #             # queue.push((successor[0], path + [successor[1]]))
+    # return []
+    
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
-
+    fringe = util.PriorityQueue()
+    visited = []
+    start_state = problem.getStartState()
+    # fringe.push(start_state, 0)
+    # fringe.push([], 0)
+    fringe.push((start_state, []), 0)
+    while not fringe.isEmpty():
+        # curr_state = fringe.pop()
+        # path = fringe.pop()
+        curr_state, path = fringe.pop()
+        
+        
+        if curr_state not in visited:
+            visited.append(curr_state)           
+            if problem.isGoalState(curr_state):
+                return path
+            for successor in problem.getSuccessors(curr_state):
+                # fringe.push(successor[0], len(path))
+                # fringe.push(path + [successor[1]], len(path))
+                fringe.push((successor[0], path + [successor[1]]), problem.getCostOfActions(path) + successor[2])
+    return []
 def nullHeuristic(state, problem=None):
     """
     A heuristic function estimates the cost from the current state to the nearest
@@ -109,7 +188,25 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    fringe = util.PriorityQueue()
+    visited = []
+    start_state = problem.getStartState()
+    # fringe.push(start_state, 0)
+    # fringe.push([], 0)
+    fringe.push((start_state, []), 0)
+    while not fringe.isEmpty():
+        # curr_state = fringe.pop()
+        # path = fringe.pop()
+        curr_state, path = fringe.pop()
+        if curr_state not in visited:
+            if problem.isGoalState(curr_state):
+                return path
+            visited.append(curr_state)
+            for successor in problem.getSuccessors(curr_state):
+                # fringe.push(successor[0], len(path) + heuristic(successor[0], problem))
+                # fringe.push(path + [successor[1]], len(path) + heuristic(successor[0], problem))
+                fringe.push((successor[0], path + [successor[1]]), problem.getCostOfActions(path) + successor[2] + heuristic(successor[0], problem))
+    return []
 
 
 # Abbreviations
