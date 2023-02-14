@@ -1,3 +1,5 @@
+# Students: Rishi Mullangi and Sashwat Venkatesh
+
 # search.py
 # ---------
 # Licensing Information:  You are free to use or extend these projects for
