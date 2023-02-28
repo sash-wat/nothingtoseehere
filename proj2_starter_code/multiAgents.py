@@ -71,33 +71,18 @@ class ReflexAgent(Agent):
         newPos = successorGameState.getPacmanPosition()
         newFood = successorGameState.getFood()
         newGhostStates = successorGameState.getGhostStates()
-           
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
-
-        newGhostPos = [newGhostStates[i].getPosition() for i in range(0, len(newGhostStates))]
-        minFoodDist = 0
-        minGhostDist = 0
-
-        foodDist = [manhattanDistance(newPos, food) for food in list(newFood)]
-        if len(foodDist) > 0:
-            minFoodDist = min(foodDist)
-        else:
-            minFoodDist = 0
-        foodLeft = newFood.count()
-
-        ghostDist = [manhattanDistance(newPos, ghost) for ghost in newGhostPos]
-        minGhostDist = min(ghostDist)
-
-        scaredTime = sum(newScaredTimes)
-
-        scale = [15, -10, -20, 10]
-        factors = [minFoodDist, foodLeft, minGhostDist, scaredTime]
-        score = sum([w * f for w, f in zip(scale, factors)])
-        return score
-        "*** YOUR CODE HERE ***"
         
+        food_distances = [manhattanDistance(newPos, food) for food in newFood.asList()]
+        min_food_distance = min(food_distances) if food_distances else 1
 
-        #return successorGameState.getScore()
+        ghost_distances = [manhattanDistance(newPos, ghost.getPosition()) for ghost in newGhostStates]
+        min_ghost_distance = min(ghost_distances) if ghost_distances else 0
+
+        score = successorGameState.getScore() - min_food_distance + (0.5* min_ghost_distance)
+        if action == "Stop":
+            score = -99999999999
+        return score
 
 def scoreEvaluationFunction(currentGameState):
     """
@@ -211,6 +196,27 @@ def betterEvaluationFunction(currentGameState):
     DESCRIPTION: <write something here so we know what you did>
     """
     "*** YOUR CODE HERE ***"
+
+    successorGameState = currentGameState
+
+    newPos = successorGameState.getPacmanPosition()
+    newFood = successorGameState.getFood()
+    newGhostStates = successorGameState.getGhostStates()
+    newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
+    
+    food_distances = [manhattanDistance(newPos, food) for food in newFood.asList()]
+    min_food_distance = min(food_distances) if food_distances else 1
+
+    ghost_distances = [manhattanDistance(newPos, ghost.getPosition()) for ghost in newGhostStates]
+    min_ghost_distance = min(ghost_distances) if ghost_distances else 0
+
+    score = successorGameState.getScore() - min_food_distance
+    """
+    if action == "Stop":
+        score = -99999999999
+    """
+    return score
+
     util.raiseNotDefined()
 
 # Abbreviation
