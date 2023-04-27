@@ -75,7 +75,10 @@ class DiscreteDistribution(dict):
         {}
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        total = self.total()
+        if total:
+            for key, val in self.items():
+                self[key] = val/total
 
     def sample(self):
         """
@@ -286,7 +289,15 @@ class ExactInference(InferenceModule):
         position is known.
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        pacman = gameState.getPacmanPosition()
+        jail = self.getJailPosition()
+        beliefs = self.beliefs
+        ghosts = self.allPositions
+
+        for g in ghosts:
+            likelihood = self.getObservationProb(observation, pacman, g, jail)
+            prior = beliefs[g]
+            beliefs[g] = likelihood * prior
 
         self.beliefs.normalize()
 
